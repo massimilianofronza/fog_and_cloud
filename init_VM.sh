@@ -1,12 +1,23 @@
 #!usr/bin/sh
 
 # Get an ubuntu image
-wget / -c https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img
+wget https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img
 
 # Create the image
 openstack image create --disk-format qcow2 --container-format bare --public \
---file /bionic-server-cloudimg-amd64.img \
+--file bionic-server-cloudimg-amd64.img \
 ubuntu-bionic-18.04
 
 # Create a custom flavor
 openstack flavor create --ram 1024 --disk 5 --vcpus 1 --public mini.ubuntu
+
+# Create the machine
+openstack server create --flavor mini.ubuntu \
+ --image ubuntu-bionic-18.04 --network private \
+ --user-data keys-udata.txt \
+ server-test
+ 
+# MANUAL steps
+openstack floating ip create public 
+#take not of it in a variable, e.g. FLOAT_IP
+server add floating ip server-test $FLOAT_IP
