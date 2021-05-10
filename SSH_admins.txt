@@ -1,0 +1,11 @@
+Instructions to connect to the machines where there's the public key of 
+the admin under ~/.ssh/authorized_keys:
+
+From your local computer:
+> ssh-agent
+> ssh-add ~/.ssh/id_rsa
+> ssh -A ${LOGIN}@${LAB_HOST}
+
+And you'll be in the VM. From there:
+> ssh ubuntu@<floating IP>
+
