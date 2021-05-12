@@ -1,0 +1,41 @@
+---
+# Remember to source your admin credentials before doing this!!!
+- name: Creation of the whole infrastructure
+  hosts: localhost
+  gather_facts: no
+  vars:
+    custom_project_name: deployment_fcc
+    web_server_sec_group: web_server_sec_group
+    web_server_name_1: web_server_test_1
+    web_server_name_2: web_server_test_2
+    web_server_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
+    web_server_flavor: c1
+    web_server_network: private
+  tasks:
+    - name: Creation of the web-server security group
+      openstack.cloud.security_group:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ web_server_sec_group }}"
+        description: Security group for web-servers
+    - name: Creation of the web-server security group rules
+      openstack.cloud.security_group_rule:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        security_group: "{{ web_server_sec_group }}"
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0
+    - name: Launching the first web-server instance
+      openstack.cloud.server:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ web_server_name_1 }}"
+        image: "{{ web_server_image }}"
+        flavor: "{{ web_server_flavor }}"
+        network: "{{ web_server_network }}"
+        key_name: Personal public of Massimiliano
+        security_groups: "{{ web_server_sec_group }}"
+
