@@ -5,29 +5,87 @@
   gather_facts: no
   vars:
     custom_project_name: deployment_fcc
-    web_server_sec_group: web_server_sec_group
-    web_server_name_1: web_server_test_1
-    web_server_name_2: web_server_test_2
+
+    load_bal_name: ans_load_bal
+    load_bal_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
+    load_bal_flavor: 42
+    load_bal_network: private
+    load_bal_sec_group: ans_load_bal_sec_group
+    load_bal_keypair: Personal public of Massimiliano
+
+    web_server_name_1: ans_web_server_1
+    web_server_name_2: ans_web_server_2
     web_server_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
-    web_server_flavor: c1
+    web_server_flavor: 42
     web_server_network: private
+    web_server_sec_group: ans_web_server_sec_group
+    web_server_keypair: Personal public of Massimiliano
+
+    database_name: ans_database
+    database_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
+    database_flavor: 42
+    database_network: private
+    database_sec_group: ans_database_sec_group
+    database_keypair: Personal public of Massimiliano
   tasks:
-    - name: Creation of the web-server security group
+    - name: Creation - Security group - Load balancer
+      openstack.cloud.security_group:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ load_bal_sec_group }}"
+        description: Security group for the load balancer
+    - name: Creation - Security group - Web-server
       openstack.cloud.security_group:
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
         name: "{{ web_server_sec_group }}"
         description: Security group for web-servers
-    - name: Creation of the web-server security group rules
+    - name: Creation - Security group - Database 
+      openstack.cloud.security_group:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ database_sec_group }}"
+        description: Security group for the database
+        
+    - name: Creation - Rule Ping, Security group - Load-balancer
       openstack.cloud.security_group_rule:
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        security_group: "{{ web_server_sec_group }}"
+        security_group: "{{ load_bal_sec_group }}"
+        direction: ingress
         protocol: icmp
         remote_ip_prefix: 0.0.0.0/0
-    - name: Launching the first web-server instance
+    - name: Creation - Rule SSH, Security group - Load-balancer
+      openstack.cloud.security_group_rule:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        security_group: "{{ load_bal_sec_group }}"
+        direction: ingress
+        protocol: tcp
+        ethertype: IPv4
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: Launching - Instance - Load-balancer
+      openstack.cloud.server:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ load_bal_name }}"
+        image: "{{ load_bal_image }}"
+        flavor: "{{ load_bal_flavor }}"
+        network: "{{ load_bal_network }}"
+        key_name: "{{ load_bal_keypair }}"
+        security_groups: "{{ load_bal_sec_group }}"
+        auto_ip: yes
+        delete_fip: yes
+    - name: Launching - Instance - First Web-server
       openstack.cloud.server:
         state: present
         auth:
@@ -36,6 +94,31 @@
         image: "{{ web_server_image }}"
         flavor: "{{ web_server_flavor }}"
         network: "{{ web_server_network }}"
-        key_name: Personal public of Massimiliano
+        key_name: "{{ web_server_keypair }}"
         security_groups: "{{ web_server_sec_group }}"
+        auto_ip: no
+    - name: Launching - Instance - Second Web-server
+      openstack.cloud.server:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ web_server_name_2 }}"
+        image: "{{ web_server_image }}"
+        flavor: "{{ web_server_flavor }}"
+        network: "{{ web_server_network }}"
+        key_name: "{{ web_server_keypair }}"
+        security_groups: "{{ web_server_sec_group }}"
+        auto_ip: no
+    - name: Launching - Instance - Database
+      openstack.cloud.server:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ database_name }}"
+        image: "{{ database_image }}"
+        flavor: "{{ database_flavor }}"
+        network: "{{ database_network }}"
+        key_name: "{{ database_keypair }}"
+        security_groups: "{{ database_sec_group }}"
+        auto_ip: no
 
