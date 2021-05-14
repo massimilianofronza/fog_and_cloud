@@ -4,7 +4,7 @@
 SERVER_IP=172.24.4.71
 USER="georgiana"
 
-ssh ubuntu@$SERVER_IP
+#ssh ubuntu@$SERVER_IP
 
 sudo adduser $USER
 
@@ -20,19 +20,20 @@ sudo rsync --archive --chown=$USER:$USER ~/.ssh /home/$USER
 #Check that this worked by opening a new terminal on your machine and ssh-ing into it
 
 # INSTALL LAMP
+# STEP 1
 #https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-ubuntu-18-04
 sudo apt-get update
+echo "Adding a DNS..."
 sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
+echo "Installing apache2 server..."
 sudo apt-get install apache2
 
-# Access web page from own browser with an ssh tunneling: 
-#ssh -L 8080:<server-ip-address>:80 georgiana.bud@$I_LAB -N
-#browser: http://<server-ip-addressss:8080
 
 # INSTALL AND CONFIGURE MYSQL
+echo "Installing mysql-server"
 sudo apt install mysql-server
 sudo mysql_secure_installation
-# Password for root:  FCCpr0ject 
+# Password for root:  FCCpr0ject= 
 
 sudo mysql # MOSTLY interactive
 SELECT user,authentication_string,plugin,host FROM mysql.user;
@@ -41,6 +42,7 @@ FLUSH PRIVILEGES;
 exit
 
 # INSTALL AND CONFIGURE PHP
+echo "Installing and configuring php..."
 sudo apt install php libapache2-mod-php php-mysql
 
 #Move the PHP index file (highlighted above to the first position after the DirectoryIndex specification
@@ -49,3 +51,17 @@ sudo cp modify_dirindex /etc/apache2/mods-enabled/dir.conf
 sudo systemctl restart apache2
 
 #We can also set up virtual hosts
+
+# Install additional php modules that allow Ampache to work 
+sudo apt install php-mysql php-curl php-json php-gd php7.2-xml
+
+# Enable a couple of apache modules with a2enmod utility 
+# rewrite: for URLs, to follow rules supplied by Ampache
+# expires: expiry time of objects for a more efficient browser storage
+sudo a2enmod rewrite expires
+sudo systemctl restart apache2
+
+
+
+
+

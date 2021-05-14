@@ -1,0 +1,27 @@
+# To make a POST request with curl, we send data that is usually sent by form. 
+# We need to specify the various fields of the form and their value
+
+FORM fields: 
+"upload_action=upload" "folder=" "MAX_FILE_SIZE=20971520" 
+"artist=-2" "album=-2" "upl=FILENAME"
+
+# General curl command:
+curl -X POST -F 'field_name=field_value' 'field2=value2' http://172.24.4.71:80/upload.php
+
+# Uploading files:
+To POST a file with curl, simply add the @ symbol before the file location. The file can be an archive, image, document, etc.
+
+To be able to POST as a logged in user, use cookies:
+--cookie "ampache=jttmt3g11rlp3mpe72eu3eia05; ampache_user=admin; ampache_lang=en_US; jp_volume=1"
+
+curl -X POST --cookie "ampache=jttmt3g11rlp3mpe72eu3eia05; ampache_user=admin; ampache_lang=en_US; jp_volume=1" -F 'upload_action=upload' -F 'folder=' -F 'MAX_FILE_SIZE=20971520' -F 'artist=-2' -F 'album=-2' -F 'upl=' -F 'filename=Mozart-Serenade-in-G-major.mp3' http://172.24.4.71:80/upload.php
+
+
+KINDA WORKS (it creates the file and te db entry, but the file is actually empty - and it is sent as Content-Type streaming-octet
+curl -X POST --cookie "ampache=jttmt3g11rlp3mpe72eu3eia05; ampache_user=admin; ampache_lang=en_US; jp_volume=1" -F 'upload_action=upload' 
+-F 'folder=' -F 'MAX_FILE_SIZE=20971520' -F 'artist=-2' -F 'album=-2' -F 'upl=; filename=Mozart-Serenade-in-G-major.mp3;type=audio/mpeg'
+"file=@Mozart....mp3" http://172.24.4.71:80/upload.php
+
+To see what does the command do, run this on the webserver: 
+sudo tcpdump -i ens3 'port 80' -A 
+
