@@ -20,4 +20,4 @@ openstack server create --flavor mini.ubuntu \
 # MANUAL steps
 openstack floating ip create public 
 #take not of it in a variable, e.g. FLOAT_IP
-server add floating ip server-test $FLOAT_IP
+openstack server add floating ip server-test $FLOAT_IP
