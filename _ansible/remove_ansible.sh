@@ -12,3 +12,9 @@ openstack server delete ans_database
 openstack security group delete ans_load_bal_sec_group
 openstack security group delete ans_web_server_sec_group
 openstack security group delete ans_database_sec_group
+
+# Then the networks
+openstack network delete ans_net_first
+openstack network delete ans_net_second
+openstack network delete ans_net_third
+
