@@ -9,6 +9,10 @@
     net_first_name: ans_net_first
     net_second_name: ans_net_second
     net_third_name: ans_net_third
+    
+    sub_first_name: ans_sub_first
+    sub_second_name: ans_sub_second
+    sub_third_name: ans_sub_third
 
     load_bal_name: ans_load_bal
     load_bal_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
@@ -53,6 +57,18 @@
           project_name: "{{ custom_project_name }}"
         name: "{{ net_third_name }}"
         external: no
+
+    - name: Creation - Subnet - First network's subnet
+      openstack.cloud.subnet:
+        state: present
+        network_name: "{{ net_first_name }}"
+        name: "{{ sub_first_name }}"
+        cidr: 10.20.20.0/24
+        dns_nameservers:
+         - 8.8.8.8
+        host_routes:
+         - destination: 10.20.20.0/24
+           nexthop: 10.20.20.1
 
     - name: Creation - Security group - Load balancer
       openstack.cloud.security_group:
