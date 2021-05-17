@@ -58,7 +58,9 @@
         flavor: "{{ web_server_flavor }}"
         network: "{{ web_server_network }}"
         key_name: "{{ key_pair }}"
-        security_groups: "{{ web_server_sec_group }}", "{{ base_sec_group }}"
+        security_groups: 
+          - "{{ web_server_sec_group }}"
+          - "{{ base_sec_group }}"
         auto_ip: no
     
     - name: Launching - Instance - Second Web-server
@@ -71,7 +73,9 @@
         flavor: "{{ web_server_flavor }}"
         network: "{{ web_server_network }}"
         key_name: "{{ key_pair }}"
-        security_groups: "{{ web_server_sec_group }}", "{{ base_sec_group }}"
+        security_groups: 
+          - "{{ web_server_sec_group }}" 
+          - "{{ base_sec_group }}"
         auto_ip: no
     
     - name: Launching - Instance - Database
@@ -84,5 +88,7 @@
         flavor: "{{ database_flavor }}"
         network: "{{ database_network }}"
         key_name: "{{ key_pair }}"
-        security_groups: "{{ database_sec_group }}", "{{ base_sec_group }}"
+        security_groups: 
+          - "{{ database_sec_group }}"
+          - "{{ base_sec_group }}"
         auto_ip: no

@@ -7,8 +7,8 @@
     custom_project_name: deployment_fcc
     
     base_sec_group: ans_base_sec_group
-    load_bal_sec_group: ans_loadbal_sec_group
-    web_server_sec_group: ans_webserver_sec_group
+    load_bal_sec_group: ans_load_bal_sec_group
+    web_server_sec_group: ans_web_server_sec_group
     database_sec_group: ans_database_sec_group
     
   tasks: 
@@ -17,7 +17,7 @@
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        name: "{{ ans_base_sec_group }}"
+        name: "{{ base_sec_group }}"
         description: Base security group for ping and ssh 
   
     - name: Creation - Security group - Load balancer
@@ -49,7 +49,7 @@
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        security_group: "{{ ans_base_sec_group }}"
+        security_group: "{{ base_sec_group }}"
         direction: ingress
         protocol: icmp
         remote_ip_prefix: 0.0.0.0/0
@@ -59,7 +59,7 @@
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        security_group: "{{ ans_base_sec_group }}"
+        security_group: "{{ base_sec_group }}"
         direction: ingress
         protocol: tcp
         ethertype: IPv4
@@ -67,12 +67,12 @@
         port_range_max: 22
         remote_ip_prefix: 0.0.0.0/0
 
-    - name: Creation - Rule HTTP Security group - Web-server
+    - name: Creation - Rule HTTP, Security group - Web-server
       openstack.cloud.security_group_rule:
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        security_group: "{{ ans_webserver_sec_group }}"
+        security_group: "{{ web_server_sec_group }}"
         direction: ingress
         protocol: tcp
         ethertype: IPv4
@@ -85,7 +85,7 @@
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        security_group: "{{ ans_database_sec_group }}"
+        security_group: "{{ database_sec_group }}"
         direction: ingress
         protocol: tcp
         ethertype: IPv4
@@ -98,7 +98,7 @@
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
-        security_group: "{{ ans_database_sec_group }}"
+        security_group: "{{ database_sec_group }}"
         direction: ingress
         protocol: udp
         ethertype: IPv4
