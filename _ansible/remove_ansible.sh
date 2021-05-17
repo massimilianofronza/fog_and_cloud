@@ -14,6 +14,7 @@ if [ "$servers" = "Y" ] || [ "$servers" = "y" ]
 then
     servers="n"
 
+    echo ""
     echo "Want to check available instances? (y)es/(n)o"
     read servers
     if [ "$servers" = "Y" ] || [ "$servers" = "y" ]
@@ -40,6 +41,7 @@ if [ "$networks" = "Y" ] || [ "$networks" = "y" ]
 then
     networks="n"
     
+    echo ""
     echo "Want to check available networks? (y)es/(n)o"
     read networks
     if [ "$networks" = "Y" ] || [ "$networks" = "y" ]
@@ -65,6 +67,7 @@ if [ "$sec_group" = "Y" ] || [ "$sec_group" = "y" ]
 then
     sec_group="n"
 
+    echo ""
     echo "Want to check available security groups? (y)es/(n)o"
     read sec_group
     if [ "$sec_group" = "Y" ] || [ "$sec_group" = "y" ]
