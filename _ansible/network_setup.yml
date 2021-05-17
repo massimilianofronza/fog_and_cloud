@@ -1,0 +1,98 @@
+---
+# Remember to source your admin credentials before doing this!!!
+- name: Creation of the network infrastructure
+  hosts: localhost
+  gather_facts: no
+  vars:
+    custom_project_name: deployment_fcc
+
+    net_first_name: ans_net_first
+    net_second_name: ans_net_second
+    net_third_name: ans_net_third
+    
+    sub_first_name: ans_sub_first
+    sub_second_name: ans_sub_second
+    sub_third_name: ans_sub_third
+  tasks:
+    - name: Creation - Network - First network
+      openstack.cloud.network:
+      state: present
+      auth:
+        project_name: "{{ custom_project_name }}"
+      name: "{{ net_first_name }}"
+      external: yes
+      
+    - name: Creation - Subnet - First network's subnet
+      openstack.cloud.subnet:
+      state: present
+      network_name: "{{ net_first_name }}"
+      name: "{{ sub_first_name }}"
+      cidr: 10.10.20.0/24
+      dns_nameservers:
+      - 8.8.8.8
+      host_routes:
+      - destination: 10.10.20.0/24
+        nexthop: 10.10.20.1
+
+    - name: Creation - Network - Second network
+      openstack.cloud.network:
+      state: present
+      auth:
+        project_name: "{{ custom_project_name }}"
+      name: "{{ net_second_name }}"
+      external: no
+    
+    - name: Creation - Subnet - Second network's subnet
+      openstack.cloud.subnet:
+      state: present
+      network_name: "{{ net_second_name }}"
+      name: "{{ sub_second_name }}"
+      cidr: 10.20.20.0/24
+      dns_nameservers:
+      - 8.8.8.8
+      host_routes:
+      - destination: 10.20.20.0/24
+        nexthop: 10.20.20.1  
+    
+    - name: Creation - Network - Third network
+      openstack.cloud.network:
+      state: present
+      auth:
+        project_name: "{{ custom_project_name }}"
+      name: "{{ net_third_name }}"
+      external: no
+      
+    - name: Creation - Subnet - Third network's subnet
+      openstack.cloud.subnet:
+      state: present
+      network_name: "{{ net_third_name }}"
+      name: "{{ sub_third_name }}"
+      cidr: 10.30.30.0/24
+      dns_nameservers:
+      - 8.8.8.8
+      host_routes:
+      - destination: 10.30.30.0/24
+        nexthop: 10.30.30.1  
+
+    # Creates a router attached to ext_network1 on an IPv4 subnet and one
+    # internal subnet interface.
+    - name: Creation - Router - Connection with external network 
+    openstack.cloud.router:
+    state: present
+    name: routerA
+    network: public
+    interfaces:
+      - ans_sub_first
+
+    # Create another router with two internal subnet interfaces, with default gateway.
+    - name: Creation - Router - Internal connection
+    openstack.cloud.router:
+    name: routerB
+    network: ans_sub_first
+    interfaces:
+      - net: ans_net_first
+        subnet: ans_sub_first
+      - net: ans_net_second
+        subnet: ans_sub_second
+        
+   
