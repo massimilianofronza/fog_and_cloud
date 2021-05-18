@@ -14,8 +14,8 @@
     key_pair: my_key
   
     load_bal_name: ans_load_bal
-    load_bal_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
-    load_bal_flavor: 42
+    load_bal_image: b5920bf6-28c6-4daa-aa62-4f78b8784220
+    load_bal_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301
     load_bal_network: ans_net_first
     load_bal_sec_group: ans_load_bal_sec_group
 
@@ -47,6 +47,14 @@
         security_groups: "{{ base_sec_group }}"
         auto_ip: yes
         delete_fip: yes
+        userdata: |
+          #cloud-config
+          runcmd:
+            - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
+            - sudo apt update
+            - sudo apt install -y mysql-server
+            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password FCCpr0ject='
+            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password FCCpr0ject='
     
     - name: Launching - Instance - First Web-server
       openstack.cloud.server:
@@ -92,3 +100,15 @@
           - "{{ database_sec_group }}"
           - "{{ base_sec_group }}"
         auto_ip: no
+        userdata: |
+          #cloud-config
+          runcmd:
+            - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
+            - sudo apt-get update
+            - sudo apt install -y nfs-kernel-server
+            - sudo mkdir -p /mnt/sharedMusic
+            - sudo chown nobody:nogroup /mnt/sharedMusic
+            - sudo chmod 777 /mnt/sharedMusic
+            - sudo sed -i '$ a /mnt/sharedMusic 10.10.10.0/24(rw,sync,no_subtree_check)' /etc/exports
+            - sudo exportfs -a
+            - sudo systemctl restart nfs-kernel-server

@@ -100,7 +100,7 @@
           project_name: "{{ custom_project_name }}"
         security_group: "{{ database_sec_group }}"
         direction: ingress
-        protocol: udp
+        protocol: tcp
         ethertype: IPv4
         port_range_min: 2049
         port_range_max: 2049
