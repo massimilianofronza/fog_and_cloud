@@ -88,7 +88,6 @@
     - name: Creation - Router - Internal connection 1
       openstack.cloud.router:
         name: routerB
-        network: ans_net_first # some gateway
         interfaces:
          - net: ans_net_first
            subnet: ans_sub_first 

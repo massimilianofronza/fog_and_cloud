@@ -5,44 +5,40 @@
   gather_facts: no
   vars:
     custom_project_name: deployment_fcc
-
-    net_first_name: ans_net_first
-    net_second_name: ans_net_second
-    net_third_name: ans_net_third
   
     base_sec_group: ans_base_sec_group
     key_pair: my_key
   
-    load_bal_name: ans_load_bal
-    load_bal_image: b5920bf6-28c6-4daa-aa62-4f78b8784220
-    load_bal_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301
+    ubuntu_image: b5920bf6-28c6-4daa-aa62-4f78b8784220
+    ubuntu_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301
+    cirros_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
+    cirros_flavor: c1
+    
+    load_bal_name: ans_load_bal 
     load_bal_network: ans_net_first
     load_bal_sec_group: ans_load_bal_sec_group
 
     web_server_name_1: ans_web_server_1
     web_server_name_2: ans_web_server_2
-    web_server_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
-    web_server_flavor: 42
     web_server_network: ans_net_second
     web_server_sec_group: ans_web_server_sec_group
 
     database_name: ans_database
     database_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
-    database_flavor: 42
     database_network: ans_net_third
     database_sec_group: ans_database_sec_group
   
   
   tasks:
-    - name: Launching - Instance - Load-balancer
+    - name: Launching - Instance - Load-balancer 
       openstack.cloud.server:
         state: present
         auth:
           project_name: "{{ custom_project_name }}"
         name: "{{ load_bal_name }}"
-        image: "{{ load_bal_image }}"
-        flavor: "{{ load_bal_flavor }}"
-        network: "{{ load_bal_network }}"
+        image: "{{ cirros_image }}"
+        flavor: "{{ cirros_flavor }}"
+        network: "{{ load_bal_network }}" # on network 10.10.20.0/24
         key_name: "{{ key_pair }}"
         security_groups: "{{ base_sec_group }}"
         auto_ip: yes
@@ -51,40 +47,7 @@
           #cloud-config
           runcmd:
             - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
-            - sudo apt update
-            - sudo apt install -y mysql-server
-            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password FCCpr0ject='
-            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password FCCpr0ject='
-    
-    - name: Launching - Instance - First Web-server
-      openstack.cloud.server:
-        state: present
-        auth:
-          project_name: "{{ custom_project_name }}"
-        name: "{{ web_server_name_1 }}"
-        image: "{{ web_server_image }}"
-        flavor: "{{ web_server_flavor }}"
-        network: "{{ web_server_network }}"
-        key_name: "{{ key_pair }}"
-        security_groups: 
-          - "{{ web_server_sec_group }}"
-          - "{{ base_sec_group }}"
-        auto_ip: no
-    
-    - name: Launching - Instance - Second Web-server
-      openstack.cloud.server:
-        state: present
-        auth:
-          project_name: "{{ custom_project_name }}"
-        name: "{{ web_server_name_2 }}"
-        image: "{{ web_server_image }}"
-        flavor: "{{ web_server_flavor }}"
-        network: "{{ web_server_network }}"
-        key_name: "{{ key_pair }}"
-        security_groups: 
-          - "{{ web_server_sec_group }}" 
-          - "{{ base_sec_group }}"
-        auto_ip: no
+            - sudo ip route add 10.20.20.0/24 via 10.10.20.3 
     
     - name: Launching - Instance - Database
       openstack.cloud.server:
@@ -92,9 +55,9 @@
         auth:
           project_name: "{{ custom_project_name }}"
         name: "{{ database_name }}"
-        image: "{{ database_image }}"
-        flavor: "{{ database_flavor }}"
-        network: "{{ database_network }}"
+        image: "{{ ubuntu_image }}"
+        flavor: "{{ ubuntu_flavor }}"
+        network: "{{ database_network }}" # on 10.30.30.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ database_sec_group }}"
@@ -105,10 +68,56 @@
           runcmd:
             - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
             - sudo apt-get update
+            - sudo apt update
+            - sudo apt install -y mysql-server
+            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password FCCpr0ject='
+            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password FCCpr0ject='
             - sudo apt install -y nfs-kernel-server
             - sudo mkdir -p /mnt/sharedMusic
             - sudo chown nobody:nogroup /mnt/sharedMusic
             - sudo chmod 777 /mnt/sharedMusic
-            - sudo sed -i '$ a /mnt/sharedMusic 10.10.10.0/24(rw,sync,no_subtree_check)' /etc/exports
+            - sudo sed -i '$ a /mnt/sharedMusic 10.20.20.0/24(rw,sync,no_subtree_check)' /etc/exports
             - sudo exportfs -a
             - sudo systemctl restart nfs-kernel-server
+            - sudo ip route add 10.20.20.0/24 via 10.30.30.1 
+
+    
+    - name: Launching - Instance - First Web-server 
+      openstack.cloud.server:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ web_server_name_1 }}"
+        image: "{{ ubuntu_image }}"
+        flavor: "{{ ubuntu_flavor }}"
+        network: "{{ web_server_network }}" # on 10.20.20.0/24
+        key_name: "{{ key_pair }}"
+        security_groups: 
+          - "{{ web_server_sec_group }}"
+          - "{{ base_sec_group }}"
+        auto_ip: no
+        userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
+
+    
+    - name: Launching - Instance - Second Web-server 
+      openstack.cloud.server:
+        state: present
+        auth:
+          project_name: "{{ custom_project_name }}"
+        name: "{{ web_server_name_2 }}"
+        image: "{{ ubuntu_image }}"
+        flavor: "{{ ubuntu_flavor }}"
+        network: "{{ web_server_network }}" # on 10.20.20.0/24
+        key_name: "{{ key_pair }}"
+        security_groups: 
+          - "{{ web_server_sec_group }}" 
+          - "{{ base_sec_group }}"
+        auto_ip: no
+        userdata: |
+          #cloud-config
+          runcmd:
+            - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
+            - sudo apt update
+            - sudo ip route add 10.10.20.0/24 via 10.20.20.1 
+            - sudo ip route add 10.30.30.0/24 via 10.20.20.3
+    

@@ -1,0 +1,30 @@
+#cloud-config
+runcmd:
+  - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
+  - sudo apt-get update
+  - sudo apt update
+  - echo "Installing apache2 server..."
+  - sudo apt install -y apache2
+  - echo "Installing and configuring php..."
+  - sudo apt install -y php libapache2-mod-php php-mysql
+  - sudo apt install -y php-mysql php-curl php-json php-gd php7.2-xml
+  - sudo a2enmod rewrite expires
+  - sudo systemctl restart apache2
+  - echo "Installing zip ..."
+  - sudo apt install -y zip 
+  - echo "Installing ffmpeg..."
+  - sudo apt install -y ffmpeg
+  - echo "Reloading apache2..."
+  - sudo systemctl reload apache2.service  
+  - echo "Downloading ampache 4.4.2 ... "
+  - wget https://github.com/ampache/ampache/releases/download/4.4.2/ampache-4.4.2_all.zip
+  - echo "Unzipping ampache ..."
+  - sudo unzip ampache-4.4.2_all.zip -d /var/www/html/
+  - sudo chown --recursive www-data:www-data /var/www/html
+  - echo "Renaming some files ..."
+  - sudo mv /var/www/html/rest/.htaccess.dist /var/www/html/rest/.htaccess
+  - sudo mv /var/www/html/play/.htaccess.dist /var/www/html/play/.htaccess
+  - sudo mv /var/www/html/channel/.htaccess.dist /var/www/html/channel/.htaccess
+  - sudo apt-get install -y nfs-common 
+  - sudo mkdir -p /data/sharedMusic
+	
