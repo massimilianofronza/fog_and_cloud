@@ -21,7 +21,7 @@
           project_name: "{{ custom_project_name }}"
         name: "{{ net_first_name }}"
         external: yes
-      
+        
     - name: Creation - Subnet - First network's subnet
       openstack.cloud.subnet:
         state: present
@@ -74,30 +74,35 @@
          - destination: 10.30.30.0/24
            nexthop: 10.30.30.1  
 
-    # Creates a router attached to ext_network1 on an IPv4 subnet and one
+    # Creates a router attached to the public network on an IPv4 subnet and one
     # internal subnet interface.
     - name: Creation - Router - Connection with external network 
       openstack.cloud.router:
         state: present
-        name: routerA
-        network: public
+        name: routerA 
+        network: public  # some public ip
         interfaces:
-         - ans_sub_first
+         - ans_sub_first # 10.10.20.1
 
-    # Create another router with two internal subnet interfaces, with default gateway.
+    # Create another router with two internal subnet interfaces
     - name: Creation - Router - Internal connection 1
       openstack.cloud.router:
         name: routerB
-        network: ans_net_first
+        network: ans_net_first # some gateway
         interfaces:
+         - net: ans_net_first
+           subnet: ans_sub_first 
+           portip: 10.10.20.3
          - net: ans_net_second
-           subnet: ans_sub_second
+           subnet: ans_sub_second # 10.20.20.1
            
     # Create another router with two internal subnet interfaces, with default gateway.
     - name: Creation - Router - Internal connection 2
       openstack.cloud.router:
         name: routerC
-        network: ans_net_second
         interfaces:
+         - net: ans_net_second
+           subnet: ans_sub_second 
+           portip: 10.20.20.3
          - net: ans_net_third
-           subnet: ans_sub_third
+           subnet: ans_sub_third # 10.30.30.1
