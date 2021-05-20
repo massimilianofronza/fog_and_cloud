@@ -47,7 +47,7 @@
           #cloud-config
           runcmd:
             - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
-            - sudo ip route add 10.20.20.0/24 via 10.10.20.3 
+            - sudo ip route add 10.10.30.0/24 via 10.10.20.3 
     
     - name: Launching - Instance - Database
       openstack.cloud.server:
@@ -57,7 +57,7 @@
         name: "{{ database_name }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ database_network }}" # on 10.30.30.0/24
+        network: "{{ database_network }}" # on 10.10.40.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ database_sec_group }}"
@@ -76,10 +76,10 @@
             - sudo mkdir -p /mnt/sharedMusic
             - sudo chown nobody:nogroup /mnt/sharedMusic
             - sudo chmod 777 /mnt/sharedMusic
-            - sudo sed -i '$ a /mnt/sharedMusic 10.20.20.0/24(rw,sync,no_subtree_check)' /etc/exports
+            - sudo sed -i '$ a /mnt/sharedMusic 10.10.30.0/24(rw,sync,no_subtree_check)' /etc/exports
             - sudo exportfs -a
             - sudo systemctl restart nfs-kernel-server
-            - sudo ip route add 10.20.20.0/24 via 10.30.30.1 
+            - sudo ip route add 10.10.30.0/24 via 10.10.40.1 
 
     
     - name: Launching - Instance - First Web-server 
@@ -90,7 +90,7 @@
         name: "{{ web_server_name_1 }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ web_server_network }}" # on 10.20.20.0/24
+        network: "{{ web_server_network }}" # on 10.10.30.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ web_server_sec_group }}"
@@ -107,7 +107,7 @@
         name: "{{ web_server_name_2 }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ web_server_network }}" # on 10.20.20.0/24
+        network: "{{ web_server_network }}" # on 10.10.30.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ web_server_sec_group }}" 
@@ -118,6 +118,6 @@
           runcmd:
             - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
             - sudo apt update
-            - sudo ip route add 10.10.20.0/24 via 10.20.20.1 
-            - sudo ip route add 10.30.30.0/24 via 10.20.20.3
+            - sudo ip route add 10.10.20.0/24 via 10.10.30.1 
+            - sudo ip route add 10.10.40.0/24 via 10.10.30.3
     
