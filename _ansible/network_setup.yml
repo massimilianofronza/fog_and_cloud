@@ -47,12 +47,12 @@
         state: present
         network_name: "{{ net_second_name }}"
         name: "{{ sub_second_name }}"
-        cidr: 10.20.20.0/24
+        cidr: 10.10.30.0/24
         dns_nameservers:
          - 8.8.8.8
         host_routes:
-         - destination: 10.20.20.0/24
-           nexthop: 10.20.20.1  
+         - destination: 10.10.30.0/24
+           nexthop: 10.10.30.1  
     
     - name: Creation - Network - Third network
       openstack.cloud.network:
@@ -67,12 +67,12 @@
         state: present
         network_name: "{{ net_third_name }}"
         name: "{{ sub_third_name }}"
-        cidr: 10.30.30.0/24
+        cidr: 10.10.40.0/24
         dns_nameservers:
          - 8.8.8.8
         host_routes:
-         - destination: 10.30.30.0/24
-           nexthop: 10.30.30.1  
+         - destination: 10.10.40.0/24
+           nexthop: 10.10.40.1  
 
     # Creates a router attached to the public network on an IPv4 subnet and one
     # internal subnet interface.
@@ -93,7 +93,7 @@
            subnet: ans_sub_first 
            portip: 10.10.20.3
          - net: ans_net_second
-           subnet: ans_sub_second # 10.20.20.1
+           subnet: ans_sub_second # 10.10.30.1
            
     # Create another router with two internal subnet interfaces, with default gateway.
     - name: Creation - Router - Internal connection 2
@@ -102,6 +102,6 @@
         interfaces:
          - net: ans_net_second
            subnet: ans_sub_second 
-           portip: 10.20.20.3
+           portip: 10.10.30.3
          - net: ans_net_third
-           subnet: ans_sub_third # 10.30.30.1
+           subnet: ans_sub_third # 10.10.40.1
