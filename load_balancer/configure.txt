@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# We configured the load balancer with Apache
+
+sudo apt update
+sudo apt-get update
+sudo apt install -y apache2
+
+# (optional - install ModSecurity Apache module)
+sudo apt install -y libapache2-mod-security2
+
+# Restart the apache server
+sudo systemctl restart apache2
+
+# You could also configure ModSecurity to do other stuff - we won't cover it
+
+# Enable the following modules:
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_balancer
+sudo a2enmod lbmethod_bytraffic
+
+# Hit this to verify that they're enabled:
+# apache2ctl -M | grep 'proxy\|lbmethod'
+
+sudo systemctl restart apache2
+
+# Write a config file TODO now you access ampache from http://localhost/site, set the IP and port(even though I think 80 is correct), as well with the \site URI
+sudo touch /etc/apache2/conf-enabled/loadbalancer.conf
+sudo echo "<proxy balancer://serverpool>" | sudo tee /etc/apache2/conf-enabled/loadbalancer.conf > /dev/null
+sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://1.2.3.4:80" /etc/apache2/conf-enabled/loadbalancer.conf
+sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://5.6.7.8:80" /etc/apache2/conf-enabled/loadbalancer.conf
+sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet lbmethod=bytraffic" /etc/apache2/conf-enabled/loadbalancer.conf
+sudo sed -i "$ a </proxy>" /etc/apache2/conf-enabled/loadbalancer.conf
+sudo sed -i "$ a ProxyPass \"/site\" \"balancer://serverpool/\"" /etc/apache2/conf-enabled/loadbalancer.conf
+sudo sed -i "$ a ProxyPassReverse \"/site\" \"balancer://serverpool/\"" /etc/apache2/conf-enabled/loadbalancer.conf
+
+sudo systemctl restart apache2
+
+# Write a new configuration file for the lightweight monitor
+sudo touch /etc/apache2/conf-enabled/loadbalancer-manager.conf
+sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
+sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+
+# Then you could set credentials, but not for now.
+
+sudo sed -i "$ a ProxyPass \"lb-manager\" \"!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+
+sudo systemctl restart apache2
+
+
