@@ -27,4 +27,5 @@ runcmd:
   - sudo mv /var/www/html/channel/.htaccess.dist /var/www/html/channel/.htaccess
   - sudo apt-get install -y nfs-common 
   - sudo mkdir -p /data/sharedMusic
-	
+  - sudo ip route add 10.10.20.0/24 via 10.10.30.1 
+  - sudo ip route add 10.10.40.0/24 via 10.10.30.3

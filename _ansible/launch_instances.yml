@@ -7,12 +7,13 @@
     custom_project_name: deployment_fcc
   
     base_sec_group: ans_base_sec_group
-    key_pair: my_key
+    key_pair: all-keys
   
     ubuntu_image: b5920bf6-28c6-4daa-aa62-4f78b8784220
     ubuntu_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301
     cirros_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
     cirros_flavor: c1
+    flavor_512: ds512M # with 5GB of memory; otherwise m1.tiny with 1 GB
     
     load_bal_name: ans_load_bal 
     load_bal_network: ans_net_first
@@ -36,11 +37,13 @@
         auth:
           project_name: "{{ custom_project_name }}"
         name: "{{ load_bal_name }}"
-        image: "{{ cirros_image }}"
-        flavor: "{{ cirros_flavor }}"
+        image: "{{ ubuntu_image }}"
+        flavor: "{{ flavor_512 }}"
         network: "{{ load_bal_network }}" # on network 10.10.20.0/24
         key_name: "{{ key_pair }}"
-        security_groups: "{{ base_sec_group }}"
+        security_groups: 
+          - "{{ base_sec_group }}"
+          - "{{ web_server_sec_group  }}"
         auto_ip: yes
         delete_fip: yes
         userdata: |
@@ -63,24 +66,7 @@
           - "{{ database_sec_group }}"
           - "{{ base_sec_group }}"
         auto_ip: no
-        userdata: |
-          #cloud-config
-          runcmd:
-            - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
-            - sudo apt-get update
-            - sudo apt update
-            - sudo apt install -y mysql-server
-            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password FCCpr0ject='
-            - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password FCCpr0ject='
-            - sudo apt install -y nfs-kernel-server
-            - sudo mkdir -p /mnt/sharedMusic
-            - sudo chown nobody:nogroup /mnt/sharedMusic
-            - sudo chmod 777 /mnt/sharedMusic
-            - sudo sed -i '$ a /mnt/sharedMusic 10.10.30.0/24(rw,sync,no_subtree_check)' /etc/exports
-            - sudo exportfs -a
-            - sudo systemctl restart nfs-kernel-server
-            - sudo ip route add 10.10.30.0/24 via 10.10.40.1 
-
+        userdata: "{{ lookup('file', 'userdata_database.txt' )}}"
     
     - name: Launching - Instance - First Web-server 
       openstack.cloud.server:
@@ -113,11 +99,6 @@
           - "{{ web_server_sec_group }}" 
           - "{{ base_sec_group }}"
         auto_ip: no
-        userdata: |
-          #cloud-config
-          runcmd:
-            - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
-            - sudo apt update
-            - sudo ip route add 10.10.20.0/24 via 10.10.30.1 
-            - sudo ip route add 10.10.40.0/24 via 10.10.30.3
+        userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
+           
     
