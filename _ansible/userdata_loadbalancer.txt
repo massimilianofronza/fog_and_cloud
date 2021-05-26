@@ -1,0 +1,37 @@
+#cloud-config
+runcmd:
+  - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
+  - sudo ip route add 10.10.30.0/24 via 10.10.20.3
+  - sudo apt-get update
+  - sudo apt update
+  - sudo apt install -y apache2
+  - sudo apt install -y libapache2-mod-security2
+  - sudo systemctl restart apache2
+
+  - sudo a2enmod proxy
+  - sudo a2enmod proxy_http
+  - sudo a2enmod proxy_balancer
+  - sudo a2enmod lbmethod_bytraffic
+  - sudo a2enmod headers
+  - sudo systemctl restart apache2
+
+  - sudo touch /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo echo "Header add Set-Cookie \"ROUTEPATH=.%{BALANCER_WORKER_ROUTE}e; path=/\" env=BALANCER_ROUTE_CHANGED" | sudo tee /etc/apache2/conf-enabled/loadbalancer.conf > /dev/null
+  - sudo sed -i "$ a <proxy balancer://serverpool>" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.206:80 route=1" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.199:80 route=2" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet lbmethod=bytraffic" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet stickysession=ROUTEPATH" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a </proxy>" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a ProxyPass \"/site\" \"balancer://serverpool/\"" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a ProxyPassReverse \"/site\" \"balancer://serverpool/\"" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo systemctl restart apache2
+
+  - sudo touch /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a ProxyPass \"lb-manager\" \"\!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo systemctl restart apache2
+

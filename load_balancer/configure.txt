@@ -8,6 +8,8 @@ sudo apt install -y apache2
 
 # (optional - install ModSecurity Apache module)
 sudo apt install -y libapache2-mod-security2
+# Hit this to verify at least the 2.9 version:
+# apt-cache show libapache2-mod-security2 | grep -E '(Version|Package)'
 
 # Restart the apache server
 sudo systemctl restart apache2
@@ -38,16 +40,15 @@ sudo sed -i "$ a ProxyPassReverse \"/site\" \"balancer://serverpool/\"" /etc/apa
 sudo systemctl restart apache2
 
 # Write a new configuration file for the lightweight monitor
-sudo touch /etc/apache2/conf-enabled/loadbalancer-manager.conf
-sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
-sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-
-# Then you could set credentials, but not for now.
-
-sudo sed -i "$ a ProxyPass \"lb-manager\" \"!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-
-sudo systemctl restart apache2
-
+  - sudo touch /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthType \"basic\""
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthName \"lb-manager\""
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthUserFile /etc/apache2/htpasswd"
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ Require valid-user"
+  - sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a ProxyPass \"lb-manager\" \"\!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo systemctl restart apache2
 

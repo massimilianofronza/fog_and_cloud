@@ -13,7 +13,7 @@
     ubuntu_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301
     cirros_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
     cirros_flavor: c1
-    flavor_512: ds512M # with 5GB of memory; otherwise m1.tiny with 1 GB
+    load_bal_flavor: ds512M # 512MB RAM with 5GB of memory;
     
     load_bal_name: ans_load_bal 
     load_bal_network: ans_net_first
@@ -38,19 +38,15 @@
           project_name: "{{ custom_project_name }}"
         name: "{{ load_bal_name }}"
         image: "{{ ubuntu_image }}"
-        flavor: "{{ flavor_512 }}"
+        flavor: "{{ load_bal_flavor }}"
         network: "{{ load_bal_network }}" # on network 10.10.20.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ base_sec_group }}"
           - "{{ web_server_sec_group  }}"
         auto_ip: yes
-        delete_fip: yes
-        userdata: |
-          #cloud-config
-          runcmd:
-            - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
-            - sudo ip route add 10.10.30.0/24 via 10.10.20.3 
+        floating_ips: 172.24.4.236
+	userdata: "{{ lookup('file', 'userdata_loadbalancer.txt' )}}" 
     
     - name: Launching - Instance - Database
       openstack.cloud.server:
@@ -81,9 +77,9 @@
         security_groups: 
           - "{{ web_server_sec_group }}"
           - "{{ base_sec_group }}"
-        auto_ip: no
+        auto_ip: yes
+        floating_ips: 172.24.4.206
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
-
     
     - name: Launching - Instance - Second Web-server 
       openstack.cloud.server:
@@ -98,7 +94,7 @@
         security_groups: 
           - "{{ web_server_sec_group }}" 
           - "{{ base_sec_group }}"
-        auto_ip: no
+        auto_ip: yes
+        floating_ips: 172.24.4.199
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
-           
-    
+        
