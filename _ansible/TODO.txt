@@ -11,3 +11,4 @@
 - On servers: 
 	- Mount the /data/sharedMusic folder as a NFS folder specifying the private IP of the database
 	- Manually install Ampache from browser and check the configurations
+	- also change php configurations 

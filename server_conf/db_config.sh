@@ -41,3 +41,13 @@ sudo mysql -u"root" -p"FCCpr0ject=" < setup.sql
 # check that the db exists: 
 # mysql -u"database_user" -p"pr0jectDATA=base" 
 # SHOW DATABASES; 
+- sudo echo "Creating database..."
+  - sudo touch setup.sql 
+  - sudo echo "CREATE DATABASE ampache_database;" | sudo tee setup.sql > /dev/null
+  - sudo sed -i "$ a CREATE USER 'database_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'pr0jectDATA=base';" setup.sql
+  - sudo sed -i "$ a GRANT ALL PRIVILEGES ON ampache_database.* TO 'database_user'@'localhost';" setup.sql
+  - sudo sed -i "$ a CREATE USER 'database_user'@'172.24.4.0/255.255.255.0' IDENTIFIED WITH mysql_native_password BY 'pr0jectDATA=base';" setup.sql
+  - sudo sed -i "$ a GRANT ALL PRIVILEGES ON ampache_database.* TO 'database_user'@'172.24.4.0/255.255.255.0';" setup.sql
+  - sudo sed -i "$ a CREATE USER 'database_user'@'10.10.30.%' IDENTIFIED WITH mysql_native_password BY 'pr0jectDATA=base';" setup.sql
+  - sudo sed -i "$ a GRANT ALL PRIVILEGES ON ampache_database.* TO 'database_user'@'10.10.30.%';" setup.sql
+  - sudo mysql -u"root" -p"FCCpr0ject=" < setup.sql
