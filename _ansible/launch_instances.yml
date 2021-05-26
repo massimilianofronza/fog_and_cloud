@@ -15,18 +15,18 @@
     cirros_flavor: c1
     load_bal_flavor: ds512M # 512MB RAM with 5GB of memory;
     
-    load_bal_name: ans_load_bal 
-    load_bal_network: ans_net_first
+    load_bal_name: load_bal 
+    load_bal_network: load_net
     load_bal_sec_group: ans_load_bal_sec_group
 
-    web_server_name_1: ans_web_server_1
-    web_server_name_2: ans_web_server_2
-    web_server_network: ans_net_second
+    web_server_name_1: webserver_1
+    web_server_name_2: webserver_2
+    web_server_network: web_net
     web_server_sec_group: ans_web_server_sec_group
 
-    database_name: ans_database
+    database_name: database
     database_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
-    database_network: ans_net_third
+    database_network: db_net
     database_sec_group: ans_database_sec_group
   
   

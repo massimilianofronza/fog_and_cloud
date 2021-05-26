@@ -6,13 +6,13 @@
   vars:
     custom_project_name: deployment_fcc
 
-    net_first_name: ans_net_first
-    net_second_name: ans_net_second
-    net_third_name: ans_net_third
+    net_first_name: load_net
+    net_second_name: web_net
+    net_third_name: db_net
     
-    sub_first_name: ans_sub_first
-    sub_second_name: ans_sub_second
-    sub_third_name: ans_sub_third
+    sub_first_name: load_sub
+    sub_second_name: web_sub
+    sub_third_name: db_sub
   tasks:
     - name: Creation - Network - First network
       openstack.cloud.network:
