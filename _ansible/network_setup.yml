@@ -82,27 +82,27 @@
         name: routerA 
         network: public  # some public ip
         interfaces:
-         - ans_sub_first # 10.10.20.1
+         - load_sub # 10.10.20.1
 
     # Create another router with two internal subnet interfaces
     - name: Creation - Router - Internal connection 1
       openstack.cloud.router:
         name: routerB
         interfaces:
-         - net: ans_net_first
-           subnet: ans_sub_first 
+         - net: load_net
+           subnet: load_sub
            portip: 10.10.20.3
-         - net: ans_net_second
-           subnet: ans_sub_second # 10.10.30.1
+         - net: web_net
+           subnet: web_sub # 10.10.30.1
            
     # Create another router with two internal subnet interfaces, with default gateway.
     - name: Creation - Router - Internal connection 2
       openstack.cloud.router:
         name: routerC
         interfaces:
-         - net: ans_net_second
-           subnet: ans_sub_second 
+         - net: web_net
+           subnet: web_sub
            portip: 10.10.30.3
-         - net: ans_net_third
-           subnet: ans_sub_third # 10.10.40.1
+         - net: db_net
+           subnet: db_sub # 10.10.40.1
 
