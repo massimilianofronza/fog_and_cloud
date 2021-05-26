@@ -44,7 +44,6 @@
         security_groups: 
           - "{{ base_sec_group }}"
           - "{{ web_server_sec_group  }}"
-        auto_ip: yes
         floating_ips: 172.24.4.236
         userdata: "{{ lookup('file', 'userdata_loadbalancer.txt' )}}" 
     
@@ -77,7 +76,6 @@
         security_groups: 
           - "{{ web_server_sec_group }}"
           - "{{ base_sec_group }}"
-        auto_ip: yes
         floating_ips: 172.24.4.206
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
     
@@ -94,7 +92,6 @@
         security_groups: 
           - "{{ web_server_sec_group }}" 
           - "{{ base_sec_group }}"
-        auto_ip: yes
         floating_ips: 172.24.4.199
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
         
