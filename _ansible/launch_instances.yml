@@ -46,7 +46,7 @@
           - "{{ web_server_sec_group  }}"
         auto_ip: yes
         floating_ips: 172.24.4.236
-	userdata: "{{ lookup('file', 'userdata_loadbalancer.txt' )}}" 
+        userdata: "{{ lookup('file', 'userdata_loadbalancer.txt' )}}" 
     
     - name: Launching - Instance - Database
       openstack.cloud.server:
