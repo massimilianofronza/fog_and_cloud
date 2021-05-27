@@ -54,7 +54,7 @@
         name: "{{ database_name }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ database_network }}" # on 10.10.30.0/24
+        network: "{{ load_bal_network }}" # on 10.10.30.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ database_sec_group }}"

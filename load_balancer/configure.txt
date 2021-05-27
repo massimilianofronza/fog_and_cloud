@@ -1,11 +1,3 @@
-#!/bin/sh
-
-# We configured the load balancer with Apache
-
-sudo apt update
-sudo apt-get update
-sudo apt install -y apache2
-
 # (optional - install ModSecurity Apache module)
 sudo apt install -y libapache2-mod-security2
 # Hit this to verify at least the 2.9 version:
@@ -16,46 +8,26 @@ sudo systemctl restart apache2
 
 # You could also configure ModSecurity to do other stuff - we won't cover it
 
-# Enable the following modules:
-sudo a2enmod proxy
-sudo a2enmod proxy_http
-sudo a2enmod proxy_balancer
-sudo a2enmod lbmethod_bytraffic
+# Enable the modules in userdata_loadbalancer.txt
 
 # Hit this to verify that they're enabled:
 # apache2ctl -M | grep 'proxy\|lbmethod'
 
-sudo systemctl restart apache2
-
-# Write a config file TODO now you access ampache from http://localhost/site, set the IP and port(even though I think 80 is correct), as well with the \site URI
-sudo touch /etc/apache2/conf-enabled/loadbalancer.conf
-sudo echo "<proxy balancer://serverpool>" | sudo tee /etc/apache2/conf-enabled/loadbalancer.conf > /dev/null
-sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://1.2.3.4:80" /etc/apache2/conf-enabled/loadbalancer.conf
-sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://5.6.7.8:80" /etc/apache2/conf-enabled/loadbalancer.conf
-sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet lbmethod=bytraffic" /etc/apache2/conf-enabled/loadbalancer.conf
-sudo sed -i "$ a </proxy>" /etc/apache2/conf-enabled/loadbalancer.conf
-sudo sed -i "$ a ProxyPass \"/site\" \"balancer://serverpool/\"" /etc/apache2/conf-enabled/loadbalancer.conf
-sudo sed -i "$ a ProxyPassReverse \"/site\" \"balancer://serverpool/\"" /etc/apache2/conf-enabled/loadbalancer.conf
-
-sudo systemctl restart apache2
+# Write a config file loadbalancer.conf
 
 # Write a new configuration file for the lightweight monitor
-  - sudo touch /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthType \"basic\""
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthName \"lb-manager\""
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthUserFile /etc/apache2/htpasswd"
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ Require valid-user"
-  - sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo sed -i "$ a ProxyPass \"lb-manager\" \"\!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo sed -i "$ a BalancerPersist On" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo systemctl restart apache2
+
+#########################################################################
+#									#
+# ALL THE PREVIOUS STEPS WILL BE AUTOMATED. FROM NOW ON IT'S UP TO YOU. #
+#									#
+#########################################################################
 
 # To setup a password:
   - sudo touch /etc/apache2/htpasswd
-  - sudo sudo htpasswd -c /etc/apache2/htpasswd admin		# Replace admin with an obscure name
-  								# It will then ask to insert a password
-  								# twice
+  - sudo sudo htpasswd -c /etc/apache2/htpasswd admin
+
+# Replace admin with an obscure name. It will then ask to insert a password twice
 # Now to access /site/lb-manager a password will be requested
+
+# TODO you could change the index.html at /var/www/html/index.html with something else
