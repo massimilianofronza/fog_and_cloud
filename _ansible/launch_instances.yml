@@ -76,7 +76,7 @@
         security_groups: 
           - "{{ web_server_sec_group }}"
           - "{{ base_sec_group }}"
-        auto_ip: no
+        floating_ips: 172.24.4.199
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
     
     - name: Launching - Instance - Second Web-server 
@@ -92,6 +92,6 @@
         security_groups: 
           - "{{ web_server_sec_group }}" 
           - "{{ base_sec_group }}"
-        auto_ip: no
+        floating_ips: 172.24.4.206
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
         
