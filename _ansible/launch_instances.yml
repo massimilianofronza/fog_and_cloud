@@ -21,7 +21,6 @@
 
     web_server_name_1: webserver_1
     web_server_name_2: webserver_2
-    web_server_network: web_net
     web_server_sec_group: ans_web_server_sec_group
 
     database_name: database
@@ -55,7 +54,7 @@
         name: "{{ database_name }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ database_network }}" # on 10.10.40.0/24
+        network: "{{ database_network }}" # on 10.10.30.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ database_sec_group }}"
@@ -71,7 +70,7 @@
         name: "{{ web_server_name_1 }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ web_server_network }}" # on 10.10.30.0/24
+        network: "{{ load_bal_network }}" # on 10.10.20.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ web_server_sec_group }}"
@@ -87,7 +86,7 @@
         name: "{{ web_server_name_2 }}"
         image: "{{ ubuntu_image }}"
         flavor: "{{ ubuntu_flavor }}"
-        network: "{{ web_server_network }}" # on 10.10.30.0/24
+        network: "{{ load_bal_network }}" # on 10.10.20.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ web_server_sec_group }}" 
