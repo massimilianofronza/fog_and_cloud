@@ -18,8 +18,8 @@ runcmd:
   - sudo touch /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo echo "Header add Set-Cookie \"ROUTEPATH=.%{BALANCER_WORKER_ROUTE}e; path=/\" env=BALANCER_ROUTE_CHANGED" | sudo tee /etc/apache2/conf-enabled/loadbalancer.conf > /dev/null
   - sudo sed -i "$ a <proxy balancer://serverpool>" /etc/apache2/conf-enabled/loadbalancer.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.206:80 route=1" /etc/apache2/conf-enabled/loadbalancer.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.199:80 route=2" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.206:80 route=1 loadfactor=1" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.199:80 route=2 loadfactor=1" /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet lbmethod=bytraffic" /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet stickysession=ROUTEPATH" /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo sed -i "$ a </proxy>" /etc/apache2/conf-enabled/loadbalancer.conf
@@ -31,7 +31,12 @@ runcmd:
   - sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthType \"basic\""
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthName \"lb-manager\""
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthUserFile /etc/apache2/htpasswd"
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ Require valid-user"
   - sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a ProxyPass \"lb-manager\" \"\!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a BalancerPersist On" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo systemctl restart apache2
 

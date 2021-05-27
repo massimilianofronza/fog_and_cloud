@@ -50,5 +50,12 @@ sudo systemctl restart apache2
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ Require valid-user"
   - sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a ProxyPass \"lb-manager\" \"\!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a BalancerPersist On" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo systemctl restart apache2
 
+# To setup a password:
+  - sudo touch /etc/apache2/htpasswd
+  - sudo sudo htpasswd -c /etc/apache2/htpasswd admin		# Replace admin with an obscure name
+  								# It will then ask to insert a password
+  								# twice
+# Now to access /site/lb-manager a password will be requested
