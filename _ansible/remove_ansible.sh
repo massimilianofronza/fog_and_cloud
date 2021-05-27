@@ -53,7 +53,7 @@ then
         openstack router list
     fi
     
-    echo "Want to delete routers and ans_net_first, ans_net_second and ans_net_third? (y)es/(n)o"
+    echo "Want to delete routerA, routerB, load_net and db_net? (y)es/(n)o"
     read networks
     if [ "$networks" = "Y" ] || [ "$networks" = "y" ]
     then
