@@ -6,7 +6,7 @@ echo "Want to delete instances (y)es/(n)o: "
 read servers
 echo "Want to delete security group/rules (y)es/(n)o: "
 read sec_group
-echo "Want to delete networks (y)es/(n)o: "
+echo "Want to delete networks and routers (y)es/(n)o: "
 read networks
 
 # First the instances
@@ -25,14 +25,14 @@ then
         openstack server list
     fi
 
-    echo "Want to delete ans_load_bal, ans_web_server_* and ans_database? (y)es/(n)o"
+    echo "Want to delete load_bal, webserver_* and database? (y)es/(n)o"
     read servers
     if [ "$servers" = "Y" ] || [ "$servers" = "y" ]
     then
-        openstack server delete ans_load_bal
-        openstack server delete ans_web_server_1
-        openstack server delete ans_web_server_2
-        openstack server delete ans_database
+        openstack server delete load_bal
+        openstack server delete webserver_1
+        openstack server delete webserver_2
+        openstack server delete database
     fi
 fi
 
@@ -50,24 +50,20 @@ then
 
         echo "Available networks and routers(wait for it): "
         openstack network list
-		openstack router list
+        openstack router list
     fi
     
-    echo "Want to delete routers and ans_net_first, ans_net_second and ans_net_third? (y)es/(n)o"
+    echo "Want to delete routerA, routerB, load_net and db_net? (y)es/(n)o"
     read networks
     if [ "$networks" = "Y" ] || [ "$networks" = "y" ]
     then
-		openstack router remove subnet routerA ans_sub_first
-		openstack router delete routerA		
-		openstack router remove subnet routerB ans_sub_first
-		openstack router remove subnet routerB ans_sub_second
-		openstack router delete routerB
-		openstack router remove subnet routerC ans_sub_second
-		openstack router remove subnet routerC ans_sub_third
-		openstack router delete routerC
-        openstack network delete ans_net_first
-        openstack network delete ans_net_second
-        openstack network delete ans_net_third
+        openstack router remove subnet routerA load_sub
+        openstack router delete routerA		
+        openstack router remove subnet routerB load_sub
+        openstack router remove subnet routerB db_sub
+        openstack router delete routerB
+        openstack network delete load_net
+        openstack network delete db_net
     fi
 fi
 
