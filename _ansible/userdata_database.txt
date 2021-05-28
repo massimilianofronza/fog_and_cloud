@@ -8,7 +8,7 @@ runcmd:
   - sudo apt install -y mysql-server
   - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password FCCpr0ject='
   - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password FCCpr0ject='
-  - sudo apt install -y nfs-kernel-server
+  - sudo apt install -y nfs-kernel-server		# TODO Da qua in poi non funzionano i comandi, devi farli manualmente.
   - sudo mkdir -p /mnt/sharedMusic
   - sudo chown nobody:nogroup /mnt/sharedMusic
   - sudo chmod 777 /mnt/sharedMusic

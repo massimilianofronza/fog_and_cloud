@@ -60,7 +60,7 @@
         security_groups: 
           - "{{ database_sec_group }}"
           - "{{ base_sec_group }}"
-        auto_ip: no
+        auto_ip: yes
         userdata: "{{ lookup('file', 'userdata_database.txt' )}}"
     
     - name: Launching - Instance - First Web-server 
