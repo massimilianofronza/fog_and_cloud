@@ -25,6 +25,17 @@ debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again pa
 echo "Setting up the database..."
 sudo mysql -u"root" -p"FCCpr0ject=" < setup.sql
 
+# Look at the attached device 3
+ls /dev/vd* 4
+# create a filesystem on the whole volume 5
+sudo mkfs.ext4 /dev/vdb 6
+# create a mount point 7
+sudo mkdir /mnt/disk1 8
+# mount the disk 9
+sudo mount /dev/vdb /mnt/disk1 10
+# just a check if the filesystem was correctly created/mounted 11
+df -h
+
 # The above can be done manually: 
 #sudo mysql 
 #SELECT user,authentication_string,plugin,host FROM mysql.user;

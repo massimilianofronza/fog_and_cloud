@@ -8,6 +8,7 @@ runcmd:
   - echo "Installing and configuring php..."
   - sudo apt install -y php libapache2-mod-php php-mysql
   - sudo apt install -y php-mysql php-curl php-json php-gd php7.2-xml
+  - sudo apt install -y mysql-client-core-5.7 
   - sudo a2enmod rewrite expires
   - sudo systemctl restart apache2
   - echo "Installing zip ..."
