@@ -25,6 +25,7 @@
 
     database_name: database
     database_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
+    database_flavor: d3
     database_network: db_net
     database_sec_group: ans_database_sec_group
   
@@ -53,13 +54,13 @@
           project_name: "{{ custom_project_name }}"
         name: "{{ database_name }}"
         image: "{{ ubuntu_image }}"
-        flavor: "{{ ubuntu_flavor }}"
+        flavor: "{{ database_flavor }}"
         network: "{{ database_network }}" # on 10.10.30.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
           - "{{ database_sec_group }}"
           - "{{ base_sec_group }}"
-        auto_ip: no
+        auto_ip: yes
         userdata: "{{ lookup('file', 'userdata_database.txt' )}}"
     
     - name: Launching - Instance - First Web-server 

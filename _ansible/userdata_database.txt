@@ -1,13 +1,14 @@
 #cloud-config
 runcmd:
   - sudo sed -i '$ a nameserver 8.8.8.8' /etc/resolv.conf
-  - sudo ip route add 10.10.20.0/24 via 10.10.30.1 
+  - sudo ip route add 10.10.20.0/24 via 10.10.30.1
+  - sudo ip route replace default via 10.10.30.4
   - sudo apt-get update
   - sudo apt update
   - sudo apt install -y mysql-server
   - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password FCCpr0ject='
   - sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password FCCpr0ject='
-  - sudo apt install -y nfs-kernel-server
+  - sudo apt install -y nfs-kernel-server		# TODO Da qua in poi non funzionano i comandi, devi farli manualmente.
   - sudo mkdir -p /mnt/sharedMusic
   - sudo chown nobody:nogroup /mnt/sharedMusic
   - sudo chmod 777 /mnt/sharedMusic
