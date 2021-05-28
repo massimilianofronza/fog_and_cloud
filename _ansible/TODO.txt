@@ -4,11 +4,14 @@
 - In database machine:
 	- check IP addresses in setup.sql 
 	- install the database from setup.sql: sudo mysql -u"root" -p"FCCpr0ject=" < setup.sql
-	- allow the database_user from remote addresses 10.10.30.0/24 to access the database: in  /etc/mysql/mysql.conf.d/mysqld.cnf: bind-address 0.0.0.0 (or the IPs of the servers) 
+	- allow the database_user from remote addresses 10.10.30.0/24 to access the database: in  
+	/etc/mysql/mysql.conf.d/mysqld.cnf: bind-address 0.0.0.0 (or the IPs of the servers) 
 	If 0.0.0.0 we can also change the security groups to only allow connections from the subnet
-		For MySql version 8.0.13 and above, you can specify a list of comma-separated IP addresses: bind-address = 10.0.0.1,10.0.1.1,10.0.2.1. Remember to restart your MySQL instance after changing the config file.
+		For MySql version 8.0.13 and above, you can specify a list of comma-separated IP addresses: bind-address = 10.0.0.1,10.0.1.1,10.0.2.1. 
+		Remember to restart your MySQL instance after changing the config file.
 
 - On servers: 
 	- Mount the /data/sharedMusic folder as a NFS folder specifying the private IP of the database
 	- Manually install Ampache from browser and check the configurations
 	- also change php configurations 
+	- in /etc/php/7.2/apache2/php.ini -> chnage upload_max_filesize to 20MB, post_max_size to 30MB
