@@ -70,5 +70,7 @@ echo "There are still some steps to go: see the end of this file."
 # There may be some troubles with ampache.cfg.php file but 
 # you'll manage to find a way! Indicate the IP addr of the database
 # as host.
+#https://serverfault.com/questions/66347/why-is-the-response-on-localhost-so-slow
+
 
 
