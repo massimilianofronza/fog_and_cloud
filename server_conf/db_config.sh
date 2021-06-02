@@ -29,9 +29,9 @@ ls /dev/vd*
 # create a filesystem on the whole volume 
 sudo mkfs.ext4 /dev/vdb 
 # create a mount point 
-sudo mkdir /mnt/disk1 
+sudo mkdir /mnt/storageMusic 
 # mount the disk 
-sudo mount /dev/vdb /mnt/disk1 
+sudo mount /dev/vdb /mnt/storageMusic 
 # just a check if the filesystem was correctly created/mounted 
 df -h
 

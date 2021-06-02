@@ -21,3 +21,10 @@ openstack server create --flavor mini.ubuntu \
 openstack floating ip create public 
 #take not of it in a variable, e.g. FLOAT_IP
 openstack server add floating ip server-test $FLOAT_IP
+
+# Creation of volumes
+openstack volume create --size 10 db_volume
+openstack server add volume database db_volume
+openstack server show database --format json | jq .volumes_attached 
+openstack volume list 
+openstack volume show db_volume
