@@ -40,7 +40,7 @@
         security_groups: 
           - "{{ base_sec_group }}"
           - "{{ web_server_sec_group  }}"
-        floating_ips: 172.24.4.236
+        floating_ips: 172.24.4.51
         userdata: "{{ lookup('file', 'userdata_loadbalancer.txt' )}}" 
     
     - name: Launching - Instance - Database
@@ -56,7 +56,7 @@
         security_groups: 
           - "{{ database_sec_group }}"
           - "{{ base_sec_group }}"
-        floating_ips: 172.24.4.129
+        floating_ips: 172.24.4.224
         userdata: "{{ lookup('file', 'userdata_database.txt' )}}"
     
     - name: Launching - Instance - First Web-server 
@@ -72,7 +72,7 @@
         security_groups: 
           - "{{ web_server_sec_group }}"
           - "{{ base_sec_group }}"
-        floating_ips: 172.24.4.199
+        floating_ips: 172.24.4.87
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
     
     - name: Launching - Instance - Second Web-server 
@@ -88,6 +88,6 @@
         security_groups: 
           - "{{ web_server_sec_group }}" 
           - "{{ base_sec_group }}"
-        floating_ips: 172.24.4.206
+        floating_ips: 172.24.4.198
         userdata: "{{ lookup('file', 'userdata_server.txt' )}}"
         
