@@ -19,7 +19,7 @@ sudo apt install apache2
 
 echo "Installing and configuring php..."
 sudo apt install php libapache2-mod-php php-mysql
-sudo apt install php-mysql php-curl php-json php-gd php7.2-xml
+sudo apt install php-curl php-json php-gd php7.2-xml
 sudo cp modify_dirindex /etc/apache2/mods-enabled/dir.conf 
 
 sudo a2enmod rewrite expires
@@ -59,8 +59,8 @@ sudo mv /var/www/html/channel/.htaccess.dist /var/www/html/channel/.htaccess
 echo "There are still some steps to go: see the end of this file." 
 # When the installation is over, create the music directory 
 # (also depending on where it will be stored)
-# sudo mkdir -p /data/Music
-# sudo chown www-data:www-data /data/Music 
+sudo mkdir -p /mnt/Music
+sudo chown www-data:www-data /mnt/Music 
 
 # Another required step is to change the upload_max_filesize to 20MB
 # and post_max_size to 30MB in /etc/php/7.2/apache2/php.ini
