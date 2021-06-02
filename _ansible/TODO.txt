@@ -12,7 +12,7 @@
 
 - On servers:
 	- Change php configuration by swapping "php" and "html" inside of /etc/apache2/mods-enabled/dir.conf
-	- Mount the /data/sharedMusic folder as a NFS folder specifying the private IP of the database: 
+	- Mount the /mnt/sharedMusic folder as a NFS folder specifying the private IP of the database: 
 		sudo mount 10.10.30.97:/mnt/sharedMusic /mnt/sharedMusic
 	- Manually install Ampache from browser and check the configurations in setup.sql
 	- in /etc/php/7.2/apache2/php.ini -> change upload_max_filesize to 30MB, post_max_size to 40MB
