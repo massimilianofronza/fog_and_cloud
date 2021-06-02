@@ -4,30 +4,26 @@
   hosts: localhost
   gather_facts: no
   vars:
-    custom_project_name: deployment_fcc
+    custom_project_name: project_fcc
   
-    base_sec_group: ans_base_sec_group
+    base_sec_group: base_group
     key_pair: all-keys
   
     ubuntu_image: b5920bf6-28c6-4daa-aa62-4f78b8784220
-    ubuntu_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301
-    cirros_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
-    cirros_flavor: c1
-    load_bal_flavor: ds512M # 512MB RAM with 5GB of memory;
+    ubuntu_flavor: 4f96dd01-5edf-4946-9d37-e913d6a4c301 # 1024MB RAM with 5GB of memory;
     
     load_bal_name: load_bal 
     load_bal_network: load_net
-    load_bal_sec_group: ans_load_bal_sec_group
+    load_bal_sec_group: load_group
 
     web_server_name_1: webserver_1
     web_server_name_2: webserver_2
-    web_server_sec_group: ans_web_server_sec_group
+    web_server_sec_group: web_group
 
     database_name: database
-    database_image: b00ea8f8-b2ab-44cd-a263-a0a82677e47d
     database_flavor: d3
     database_network: db_net
-    database_sec_group: ans_database_sec_group
+    database_sec_group: db_group
   
   
   tasks:
@@ -38,7 +34,7 @@
           project_name: "{{ custom_project_name }}"
         name: "{{ load_bal_name }}"
         image: "{{ ubuntu_image }}"
-        flavor: "{{ load_bal_flavor }}"
+        flavor: "{{ ubuntu_flavor }}"
         network: "{{ load_bal_network }}" # on network 10.10.20.0/24
         key_name: "{{ key_pair }}"
         security_groups: 
@@ -60,7 +56,7 @@
         security_groups: 
           - "{{ database_sec_group }}"
           - "{{ base_sec_group }}"
-        auto_ip: yes
+        floating_ips: 172.24.4.129
         userdata: "{{ lookup('file', 'userdata_database.txt' )}}"
     
     - name: Launching - Instance - First Web-server 
