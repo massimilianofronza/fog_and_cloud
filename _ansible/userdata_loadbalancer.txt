@@ -31,10 +31,10 @@ runcmd:
   - sudo echo "<location "/lb-manager">" | sudo tee /etc/apache2/conf-enabled/loadbalancer-manager.conf > /dev/null
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ SetHandler balancer-manager" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ allow from all" /etc/apache2/conf-enabled/loadbalancer-manager.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthType \"basic\""
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthName \"lb-manager\""
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthUserFile /etc/apache2/htpasswd"
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ Require valid-user"
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthType \"basic\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthName \"lb-manager\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ AuthUserFile /etc/apache2/htpasswd" /etc/apache2/conf-enabled/loadbalancer-manager.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ Require valid-user" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a </location>" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a ProxyPass \"lb-manager\" \"\!\"" /etc/apache2/conf-enabled/loadbalancer-manager.conf
   - sudo sed -i "$ a BalancerPersist On" /etc/apache2/conf-enabled/loadbalancer-manager.conf
