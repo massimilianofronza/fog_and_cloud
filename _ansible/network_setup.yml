@@ -4,7 +4,7 @@
   hosts: localhost
   gather_facts: no
   vars:
-    custom_project_name: deployment_fcc
+    custom_project_name: project_fcc
 
     load_bal_network: load_net
     database_network: db_net
@@ -80,5 +80,7 @@
         name: routerC
         network: public  # some public ip
         interfaces:
-         - db_sub # 10.10.20.1
+         - net: db_net
+           subnet: db_sub
+           portip: 10.10.30.4
 

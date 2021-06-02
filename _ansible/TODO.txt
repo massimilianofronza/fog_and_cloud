@@ -1,3 +1,13 @@
+- For a total re-installation:
+	- Create a new project
+	- Send you the .rc to source
+	- Release IPs 172.24.4.236, 172.24.4.199, 172.24.4.206, 172.24.4.129 from the other project
+	- Add max and geo users, as well as eval user to read-only
+	- Import the 3 all-keys
+	- Ensure the ubuntu.mini flavor exists as well as the database volume
+	- Run ./ansible and pray God
+	- Place eval.key inside the loadbalancer
+
 - On all: 
 	- Check correctness of routes and reachability of the private subnets
 

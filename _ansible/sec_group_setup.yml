@@ -4,12 +4,12 @@
   hosts: localhost
   gather_facts: no
   vars:
-    custom_project_name: deployment_fcc
+    custom_project_name: project_fcc
     
-    base_sec_group: ans_base_sec_group
-    load_bal_sec_group: ans_load_bal_sec_group
-    web_server_sec_group: ans_web_server_sec_group
-    database_sec_group: ans_database_sec_group
+    base_sec_group: base_group
+    load_bal_sec_group: load_group
+    web_server_sec_group: web_group
+    database_sec_group: db_group
     
   tasks: 
     - name: Creation - Security group - Base ping and ssh

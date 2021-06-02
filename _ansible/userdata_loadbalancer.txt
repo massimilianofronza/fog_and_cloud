@@ -18,8 +18,8 @@ runcmd:
   - sudo touch /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo echo "Header add Set-Cookie \"ROUTEPATH=.%{BALANCER_WORKER_ROUTE}e; path=/\" env=BALANCER_ROUTE_CHANGED" | sudo tee /etc/apache2/conf-enabled/loadbalancer.conf > /dev/null
   - sudo sed -i "$ a <proxy balancer://serverpool>" /etc/apache2/conf-enabled/loadbalancer.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.206:80 route=1 loadfactor=1" /etc/apache2/conf-enabled/loadbalancer.conf
-  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.199:80 route=2 loadfactor=1" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.87:80 route=1 loadfactor=1" /etc/apache2/conf-enabled/loadbalancer.conf
+  - sudo sed -i "$ a \ \ \ \ \ \ \ \ BalancerMember http://172.24.4.198:80 route=2 loadfactor=1" /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet lbmethod=bytraffic" /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo sed -i "$ a \ \ \ \ \ \ \ \ ProxySet stickysession=ROUTEPATH" /etc/apache2/conf-enabled/loadbalancer.conf
   - sudo sed -i "$ a </proxy>" /etc/apache2/conf-enabled/loadbalancer.conf
