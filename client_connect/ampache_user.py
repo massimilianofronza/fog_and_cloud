@@ -2,6 +2,7 @@ import time
 import ampache
 import requests
 import random
+import json
 from xml.etree import ElementTree as ET
 
 #https://ampache.org/api/
@@ -25,7 +26,7 @@ eval = 'eval'
 eval_api = '10f2f5515527dc3398bf300a4b67563a'
 
 # processed details
-encrypted_key = ampache.encrypt_string(admin_api, admin)
+encrypted_key = ampache.encrypt_string(georgi_api, georgi)
 ampache_session = ampache.handshake(ampache_url, encrypted_key)
 
 # 1. Try to get all the songs 
@@ -33,6 +34,22 @@ url = f'{url1}/server/json.server.php?action=songs&auth={ampache_session}'
 
 if ampache_session:
 	response = requests.get(url)
+	
+# Process JSON content
+response = requests.get(url) #json content
+content = response.json()
+type(content) # class 'list'
+n = len(content) # gives number of entries
+# Get a random song
+i = random.randint(0,n-1)
+chosen = content[i]
+song_id = chosen['id']
+song_name = chosen['title']
+listen_to = ampache.stream(url1, ampache_session, song_id, 'song', f'/media/downloaded/{song_name}.mp3') 
+# Logout and try to make a request, should result in session expired: 
+gb = ampache.goodbye(ampache_url, ampache_session)
+nope = ampache.stream(url1, ampache_session, second_id, 'song', f'/media/downloaded/nope') 
+
 
 # 2. Try to ping
 my_ping = ampache.ping(ampache_url, ampache_session)
@@ -46,7 +63,7 @@ ampache.user_update(ampache_url, ampache_session, 'random', fullname = 'Georgian
 
 # 5. Stream a song with an id; requires server url (so url1 or url2)
 stream(id, type, destination, api_format = 'xml')
-streaming = ampache.stream(url2, ampache_session, '1', 'song', '/home/georgiana.bud/random.mp3') 
+streaming = ampache.stream(url2, ampache_session, '2', 'song', '/media/downloaded/song.mp3') 
 
 # 6. 'goodbye' destroys the session
 gb = ampache.goodbye(ampache_url, ampache_session)

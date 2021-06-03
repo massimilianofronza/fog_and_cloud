@@ -1,0 +1,20 @@
+#https://docs.docker.com/engine/reference/commandline/volume_create/
+docker volume create music
+docker volume inspect music 
+sudo ls /path/to/volume in PaaS machine 
+
+Run a docker container :
+docker run -it --name users_downloads -v music:/media/downloaded ampache
+
+Make a user request the streaming of a song (it actually downloads it)
+-> destination /media/downloaded 
+
+From another terminal, list the contents of the volume:
+sudo ls /var/lib/docker/volumes/music/_data -> the song should appear here
+
+You can also check the contents in the docker container via:
+
+docker exec -it users_downloads ls -l /media/downloaded
+or
+docker exec -it users_download nano /media/downloaded/<song_name>
+ 
