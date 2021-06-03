@@ -18,3 +18,9 @@ docker exec -it users_downloads ls -l /media/downloaded
 or
 docker exec -it users_download nano /media/downloaded/<song_name>
  
+
+docker logs 6b78c5168461 | grep "USER"
+
+Then, after placing the script in /home, commit and tag to keep track of changes: 
+docker commit CONTAINER_ID ampache-users
+docker tag ampache-users:latest ampache-users:working
