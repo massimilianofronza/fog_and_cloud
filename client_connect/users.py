@@ -3,6 +3,8 @@ import ampache
 import requests
 import random
 import json
+import os.path
+from os import path
 from xml.etree import ElementTree as ET
 
 # Server variables
@@ -45,11 +47,15 @@ while True:
 	song_id = chosen['id']
 	song_title = chosen['title']
 	print(f"USER-{user}: I am thinking of listening to {song_title}")
+	
+	song_path = f'/media/downloaded/{user}-{song_title}.mp3'
+	if path.exists(song_path):
+		song_path = '/dev/null'
 
 	prob = random.randint(1,10)
 	if prob >= 7:
 		print(f"USER-{user}: I will listen to it!")
-		listen_to = ampache.stream(url, ampache_session, song_id, 'song', f'/media/downloaded/{user}_{song_title}.mp3')
+		listen_to = ampache.stream(url, ampache_session, song_id, 'song', song_path)
 		time.sleep(5)
 	else: 
 		print(f"USER-{user}: Changed my mind...")
