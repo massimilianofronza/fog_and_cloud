@@ -1,18 +1,18 @@
 import time
-#import ampache
+import ampache
 import requests
 import random
 import json
 from xml.etree import ElementTree as ET
 
 # Admin variables
-ampache_url = 'http://172.24.4.51/site'
-url1 = 'http://172.24.4.87'
-url2 = 'http://172.24.4.198'
+ampache_url = "http://172.24.4.51/site"
 
-admin = 'admin'
-admin_api = '97b38cb216d93087a3d8f966330ea094'
+# Admin name and API key
+admin = "admin"
+admin_api = "97b38cb216d93087a3d8f966330ea094"
 user_count = 0
+max_users = 10
 
 while True:
     # Login
@@ -22,11 +22,21 @@ while True:
         print("ADMIN: Connection established!")
     else:
         print("ADMIN: Troubles in connecting to server!")
-    
+
     # Decide whether to create a user or change the name of an
-    # already exsisting one:
+    # already existing one:
     prob = random.randint(1, 10)
     if prob > 5:
-        create_user = ampache.user_create(ampache_url, ampache_session, f'user{user_count++}', 'pass', 'cmdlu@email.com', False, False)
+        print(f"ADMIN: Maybe I'll create a user.")
+        
+        if user_count == max_users:
+            print(f"ADMIN: I've already created {max_users} users!")
+        else:
+            print(f"ADMIN: Creating the new USER-{user_count}!")
+            create_user = ampache.user_create(ampache_url, ampache_session, f"user{user_count}", "pass", f"user{user_count}@email.com", False, False)
+            user_count += 1
 
-    sleep(random.randint(4, 10))
+    gb = ampache.goodbye(ampache_url, ampache_session)
+    print(f"ADMIN: Closing the connection...\n")
+
+    time.sleep(random.randint(5, 15))
