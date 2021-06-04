@@ -1,0 +1,17 @@
+K8S volumes ex 22
+with kubectl describe pod ws-persistent-etc
+	- see node -> georgina.bud-worker2 
+
+We can check the status of the persistent storage on the node via docker exec, 
+because the worker node is in a container: 
+docker exec -it georgiana.bud-worker2 ls /var/local-path-provisioner/.../
+
+
+LOAD IMAGE INTO K8s
+kind load docker-image ampache-admin --name georgiana.bud !!! NOT WORKING
+
+In order to see the images that are present in the cluster: 
+docker exec -it georgiana.bud-worker crictl images
+docker exec -it georgiana.bud-worker crictl rmi ampache-admin 
+
+https://stackoverflow.com/questions/37302776/what-is-the-meaning-of-imagepullbackoff-status-on-a-kubernetes-pod 
