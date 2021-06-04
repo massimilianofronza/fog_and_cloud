@@ -6,12 +6,12 @@ import json
 from xml.etree import ElementTree as ET
 
 # Admin variables
-ampache_url = 'http://172.24.4.51/site'
-url1 = 'http://172.24.4.87'
-url2 = 'http://172.24.4.198'
+ampache_url = "http://172.24.4.51/site"
+url1 = "http://172.24.4.87"
+url2 = "http://172.24.4.198"
 
-admin = 'admin'
-admin_api = '97b38cb216d93087a3d8f966330ea094'
+admin = "admin"
+admin_api = "97b38cb216d93087a3d8f966330ea094"
 user_count = 0
 
 while True:
@@ -22,11 +22,12 @@ while True:
         print("ADMIN: Connection established!")
     else:
         print("ADMIN: Troubles in connecting to server!")
-    
+
     # Decide whether to create a user or change the name of an
-    # already exsisting one:
+    # already existing one:
     prob = random.randint(1, 10)
     if prob > 5:
-        create_user = ampache.user_create(ampache_url, ampache_session, f'user{user_count++}', 'pass', 'cmdlu@email.com', False, False)
-
+        create_user = ampache.user_create(ampache_url, ampache_session, f"user{user_count}", "pass", f"user{user_count}@email.com", False, False)
+        user_count += 1
+    
     sleep(random.randint(4, 10))
