@@ -37,6 +37,6 @@ while True:
             user_count += 1
 
     gb = ampache.goodbye(ampache_url, ampache_session)
-    print(f"ADMIN: Closing the connection...")
+    print(f"ADMIN: Closing the connection...\n")
 
-    time.sleep(random.randint(4, 10))
+    time.sleep(random.randint(5, 15))
