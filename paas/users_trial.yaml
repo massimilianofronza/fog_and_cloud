@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-vols
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-vols
+  template:
+    metadata:
+      labels:
+        app: users-vols
+    spec:
+      containers:
+      - name: users-vols
+        image: ampache-users:vols
+        command:
+        - "/bin/bash"
+        - "-ecxv"
+        - |
+          echo "I am pod: users-vols"
+          ls /media/downloaded 
+          touch /media/downloaded/itworks.txt
+          python3 /home/users.py
+          ls /media/downloaded
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: volume
+          mountPath: /media/downloaded/
+      volumes:
+      - name: volume
+        persistentVolumeClaim:
+          claimName: music-pvc
+

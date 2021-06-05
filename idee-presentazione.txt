@@ -1,0 +1,11 @@
+IDEE + COMANDI da avere pronti
+
+REQUIRMENTS:
+-Volume già creato 
+-File di deployment degli utenti su paas.
+Fai partire il deployment degli utenti:
+ 
+kubectl create -f users-trials.yaml
+
+The music should be downloded here:
+docker exec -it eval-worker2 ls /var/local-path-provisioner/pvc-71aaecb1-f7f8-4f29-9dd1-ddb33ec1a202_default_music-pvc

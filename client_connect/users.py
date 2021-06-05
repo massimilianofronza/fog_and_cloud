@@ -19,6 +19,7 @@ urls = [
 users = {
 	'admin' : '97b38cb216d93087a3d8f966330ea094',
 	'georgi' : '191f108d69dacce4bd3b2fdcd9246d95',
+	'mass' : 'b0d5f4168caf5160a0cdecc7ce03b1e4',
 	'random' : 'c5c3ec286d4ef31243e4d780c1ff2bb2', 
 	'eval' : '10f2f5515527dc3398bf300a4b67563a'
 }
