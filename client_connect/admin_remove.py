@@ -27,3 +27,4 @@ for i in range(max_users):
     ampache.user_delete(ampache_url, ampache_session, f'user{i}')
 
 print(f"ADMIN: Closing the connection...\n")
+gb = ampache.goodbye(ampache_url, ampache_session)
