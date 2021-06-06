@@ -3,7 +3,19 @@ import ampache
 import requests
 import random
 import json
+import os.path
+from os import path
+import argparse #used to take parameters from command line
 from xml.etree import ElementTree as ET
+
+# Arguments
+parser = argparse.ArgumentParser(description='Configuration for the admin')
+parser.add_argument('min_sleep_time', help='Min time to sleep between requests (recommended between 2 and 10 seconds)', type=int)
+parser.add_argument('max_sleep_time', help='Max time to sleep between requests (recommended between 5 and 20 seconds)', type=int)
+
+args = parser.parse_args()
+min_sleep = args.min_sleep_time
+max_sleep = args.max_sleep_time
 
 # Admin variables
 ampache_url = "http://172.24.4.51/site"
@@ -39,4 +51,4 @@ while True:
     gb = ampache.goodbye(ampache_url, ampache_session)
     print(f"ADMIN: Closing the connection...\n")
 
-    time.sleep(random.randint(5, 15))
+    time.sleep(random.randint(min_sleep, max_sleep))
