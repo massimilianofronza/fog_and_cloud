@@ -22,6 +22,7 @@ spec:
         - |
           echo "I am pod: users-vols"
           ls /media/downloaded
+          python3 /home/users.py
         imagePullPolicy: Never
         volumeMounts:
         - name: volume
