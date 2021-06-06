@@ -5,7 +5,12 @@ REQUIRMENTS:
 -File di deployment degli utenti su paas.
 Fai partire il deployment degli utenti:
  
-kubectl create -f users-trials.yaml
+kubectl apply -f dep_vols_users.yaml
 
 The music should be downloded here:
 docker exec -it eval-worker2 ls /var/local-path-provisioner/pvc-71aaecb1-f7f8-4f29-9dd1-ddb33ec1a202_default_music-pvc
+
+Admin: 
+kubectl apply -f dep_entities.yaml
+Rollback: 
+kubectl get deploy entities -o yaml | sed 's;ampache-admin:update;ampache-users2:mult;g'; sed 's;python3 /home/admin_update.py 5 10;python3 /home/multiple_users.py 4 12 5;g' | kubectl replace -f -

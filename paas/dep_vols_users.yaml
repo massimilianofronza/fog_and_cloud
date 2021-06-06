@@ -21,9 +21,6 @@ spec:
         - "-ecxv"
         - |
           echo "I am pod: users-vols"
-          ls /media/downloaded 
-          touch /media/downloaded/itworks.txt
-          python3 /home/users.py
           ls /media/downloaded
         imagePullPolicy: Never
         volumeMounts:

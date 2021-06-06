@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: users-multiple
+  name: entities
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: users-multiple
+      app: entities
   template:
     metadata:
       labels:
-        app: users-multiple
+        app: entities
     spec:
       containers:
-      - name: users-mult
-        image: ampache-users2:mult
+      - name: entities
+        image: ampache-admin:update
         command:
         - "/bin/bash"
         - "-ecxv"
         - |
-          echo "I am pod: users-mult"
-          python3 /home/multiple_users.py 4 12 5
+          echo "I am pod: entities"
+          python3 /home/admin_update.py 5 10
         imagePullPolicy: Never
- 
+
