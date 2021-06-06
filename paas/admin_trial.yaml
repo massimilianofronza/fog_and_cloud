@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-update
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-update
+  template:
+    metadata:
+      labels:
+        app: admin-update
+    spec:
+      containers:
+      - name: admin-update
+        image: ampache-admin:update
+        command:
+        - "/bin/bash"
+        - "-ecxv"
+        - |
+          echo "I am pod: admin-update"
+          python3 /home/admin_update.py 5 10
+        imagePullPolicy: Never
+
