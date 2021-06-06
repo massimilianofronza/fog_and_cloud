@@ -5,7 +5,19 @@ import random
 import json
 import os.path
 from os import path
+import argparse #used to take parameters from command line
 from xml.etree import ElementTree as ET
+
+# Arguments
+parser = argparse.ArgumentParser(description='Configuration for the users')
+parser.add_argument('min_sleep_time', help='Min time to sleep between requests (recommended between 2 and 10 seconds)', type=int)
+parser.add_argument('max_sleep_time', help='Max time to sleep between requests (recommended between 5 and 20 seconds)', type=int)
+parser.add_argument('probability_listen', help='Probability in terms of p/10 of listening to a song', type=int)
+
+args = parser.parse_args()
+min_sleep = args.min_sleep_time
+max_sleep = args.max_sleep_time
+prob_listen = args.probability_listen
 
 # Server variables
 ampache_url = 'http://172.24.4.51/site'
@@ -22,20 +34,20 @@ users = {
 	'mass' : 'b0d5f4168caf5160a0cdecc7ce03b1e4',
 	'random' : 'c5c3ec286d4ef31243e4d780c1ff2bb2', 
 	'eval' : '10f2f5515527dc3398bf300a4b67563a',
-	'user0' : '', 
-	'user1' : '', 
-	'user2' : '', 
-	'user3' : '', 
-	'user4' : '', 
-	'user5' : '', 
-	'user6' : '', 
-	'user7' : '', 
-	'user8' : '', 
-	'user9' : ''
+	'user0' : 'a31730e6f3946ed7097cee2b94226ad3', 
+	'user1' : '6ad9375e5da1b312cb9771bdfa2cb8c5', 
+	'user2' : '5c57c3926ad81491ec0e2afaf29939f1', 
+	'user3' : 'b94e22c98ed847c49bf6bf86a6efcb76', 
+	'user4' : '65f10316ff6671e2c5883eaa6493adf8', 
+	'user5' : '2d678332cb76822d6be9f6b39d2b399e', 
+	'user6' : 'fafa08f733df7846dbdb1d191da8c0fa', 
+	'user7' : '7fbaad7af0a11d080aa92e264df48a2b', 
+	'user8' : '57989a80288126e7683b1f01a226fddc', 
+	'user9' : '4ab92f21d4fa36ab181b880a3c54ca07'
 }
 
+time.sleep(random.randint(1,4)) # so that not all start at the same time
 while True: 
-	time.sleep(random.randint(1,4)) # so that not all start at the same time
 	user, api_key = random.choice(list(users.items()))
 	#print(user); print(api_key)
 	encrypted_key = ampache.encrypt_string(api_key, user)
@@ -64,9 +76,9 @@ while True:
 	#these are the users for which we want to simulate high activity, but not save the songs
 	song_path = '/dev/null'
 
-	prob = random.randint(1,10)
-	if prob > 5:   # since we want more activity, give higher probability to listen
- 		print(f"USER-{user}: I will listen to it!")
+	num = random.randint(1,10)
+	if num < prob_listen:   # prob_listen passed as parameter
+		print(f"USER-{user}: I will listen to it!")
 		listen_to = ampache.stream(url, ampache_session, song_id, 'song', song_path)
 		time.sleep(5)
 	else: 
@@ -78,4 +90,4 @@ while True:
 	
 	gb = ampache.goodbye(ampache_url, ampache_session)
 	
-	time.sleep(random.randint(7,15))
+	time.sleep(random.randint(min_sleep, max_sleep))
