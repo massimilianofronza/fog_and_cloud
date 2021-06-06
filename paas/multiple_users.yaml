@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-multiple
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-multiple
+  template:
+    metadata:
+      labels:
+        app: users-multiple
+    spec:
+      containers:
+      - name: users-mult
+        image: ampache-users2:mult
+        command:
+        - "/bin/bash"
+        - "-ecxv"
+        - |
+          echo "I am pod: users-mult"
+          python3 /home/multiple_users.py 4 12 5
+        imagePullPolicy: Never
+ 
