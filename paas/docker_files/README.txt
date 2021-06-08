@@ -1,3 +1,5 @@
+## Dockerfile used to create the ampache docker image with all python packages and other dependencies installed
+
 # Available storage:
 > df -h
 # And memory:

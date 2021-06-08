@@ -21,4 +21,4 @@ sudo exportfs -a
 # Restart the nfs server to make changes effective
 sudo systemctl restart nfs-kernel-server
 
-echo "Now go to /client_connect/client_NFS.sh"
+echo "Now go to /server_conf/client_nfs.sh"
